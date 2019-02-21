@@ -1,0 +1,14 @@
+{
+    "name": "uzzaircode/date-helper",
+    "description": "contains few functions related to dates",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Uzzair Baharudin",
+            "email": "uzzaircode@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
