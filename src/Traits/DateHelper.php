@@ -14,7 +14,7 @@ trait DateHelper
     * @return object
     */
     
-    public function setDateObject(string $date_format, string $date_value): object
+    public function setDateObject(string $date_format, string $date_value): Carbon
     {
         return Carbon::createFromFormat($date_format, $date_value);
     }
@@ -34,59 +34,36 @@ trait DateHelper
     }
 
     /**
-    * Generate date range given start date and end date as Carbon objects
+    * Generate date range given start date and end date as Carbon objects.
+    * This function will return array of date objects if no format argument is supplied.
     *
     * @param Carbon $start_date
     * @param Carbon $end_date
     * @return array
     */
-    public function generateDateRange(Carbon $start_date, Carbon $end_date): array
+    public function generateDateRange(Carbon $start_date, Carbon $end_date,string $date_format = null): array
 
     {
                 
         $dates = [];
-
+        
         for ($date = $start_date; $date->lte($end_date); $date->addDay()) {
 
-            $dates[] = $date;
+            $dates[] = isset($date_format) ? $date->format($date_format) : $date->format('Y-m-d');
 
         }
 
         return $dates;
 
-    }
-
-    /**
-     * Convert array of dates to given format. You should use it together with generateDateRange() method since * it return the dates as Carbon objects
-     * As for the format, you have to type in the desired string format e.g: 'l' for days full name
-     * input  [2019-02-19, 2019-02-20];
-     * output ['Tuesday','Wednesday'];
-     * 
-     * @param array $datesArray
-     * @param string $dateFormat
-     * @return array
-     */
-    
-    public function formatDateRange(array $dates_array, string $date_format): array
-    
-    {
-
-        $dates = collect($dates_array);
-
-        $formatted_dates = $new->map(function ($date, $key) {
-            return $date->format($date_format);
-        });
-
-        return $formatted_dates->toArray();
-    }
+    }    
 
 
     /**
-     * Return an array of days count given an array of dates
+     * Return an array of days count given an array of dates in string
      * 
-     * e.g: [ 'Tuesday'=>3, 'Monday'=> 3 ]
+     * e.g: [ 'Tuesday'=> 3, 'Monday'=> 3 ]
      * 
-     * @param array $datesArray    
+     * @param array $date_array    
      * @return array
      */
 
@@ -94,7 +71,7 @@ trait DateHelper
     
     {
         
-        return count_array_values($dates_array);
+        return array_count_values($dates_array);
         
     }
 
