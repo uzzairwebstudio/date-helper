@@ -5,12 +5,13 @@ use Carbon\Carbon;
 
 trait DateHelper
 {
-       
+
     /**
     * Convert a string or timezone value into date object 
     *
     * @param string $date_format
     * @param string $date_value
+    * @return object
     */
     
     public function setDateObject(string $date_format, string $date_value): object
@@ -23,7 +24,7 @@ trait DateHelper
     * 
     * @param Carbon $date
     * @param string $date_format
-    * 
+    * @return string
     */
     
     public function setDateFormat(Carbon $date, string $date_format): string
@@ -63,6 +64,7 @@ trait DateHelper
      * 
      * @param array $datesArray
      * @param string $dateFormat
+     * @return array
      */
     
     public function formatDateRange(array $dates_array, string $date_format): array

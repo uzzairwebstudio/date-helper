@@ -3,12 +3,25 @@
     "description": "contains few functions related to dates",
     "type": "library",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Uzzair Baharudin",
-            "email": "uzzaircode@gmail.com"
-        }
-    ],
+    "authors": [{
+        "name": "Uzzair Baharudin",
+        "email": "uzzaircode@gmail.com"
+    }],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Uzzaircode\\DateHelper\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Uzzaircode\\DateHelper\\DateHelperServiceProvider"
+            ],
+            "aliases": {
+                "DateHelper": "Uzzaircode\\DateHelper\\DateHelperFacade"
+            }
+        }
+    }
 }
