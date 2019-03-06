@@ -1,6 +1,7 @@
 <?php
 
 namespace Uzzaircode\DateHelper\Traits;
+
 use Carbon\Carbon;
 
 trait DateHelper
@@ -13,12 +14,12 @@ trait DateHelper
     * @param string $date_value
     * @return object
     */
-    
+
     public function setDateObject(string $date_format, string $date_value): Carbon
     {
         return Carbon::createFromFormat($date_format, $date_value);
     }
-    
+
     /**     
     * Convert a Carbon date object to desired format
     * 
@@ -26,10 +27,10 @@ trait DateHelper
     * @param string $date_format
     * @return string
     */
-    
+
     public function setDateFormat(Carbon $date, string $date_format): string
     {
-        
+
         return $date->format($date_format);
     }
 
@@ -41,21 +42,19 @@ trait DateHelper
     * @param Carbon $end_date
     * @return array
     */
-    public function generateDateRange(Carbon $start_date, Carbon $end_date,string $date_format = null): array
+    public function generateDateRange(Carbon $start_date, Carbon $end_date, string $date_format = null): array
 
     {
-                
+
         $dates = [];
-        
+
         for ($date = $start_date; $date->lte($end_date); $date->addDay()) {
 
             $dates[] = isset($date_format) ? $date->format($date_format) : $date->format('Y-m-d');
-
         }
 
         return $dates;
-
-    }    
+    }
 
 
     /**
@@ -68,12 +67,27 @@ trait DateHelper
      */
 
     public function countDaysInDateRange(array $dates_array): array
-    
+
     {
-        
+
         return array_count_values($dates_array);
-        
     }
 
+    /**
+     * Return difference of days give n two dates
+     * 
+     * @param Carbon $start_date
+     * @param Carbon $end_date
+     * @param bool $includeDates optional: include both dates in the interval
+     * @return int
+     */
 
+    public function getDaysDifference(Carbon $start_date, Carbon $end_date, bool $includeDates = false): int
+    {
+        
+        return $includeDates ? Carbon::parse($start_date)->diffInDays(Carbon::parse($end_date))  + 1 : Carbon::parse($start_date)->diffInDays(Carbon::parse($end_date));
+
+    }
+    
+    
 }
