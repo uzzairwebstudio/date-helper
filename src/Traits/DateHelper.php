@@ -3,6 +3,8 @@
 namespace Uzzaircode\DateHelper\Traits;
 
 use Carbon\Carbon;
+use DateInterval;
+use DatePeriod;
 
 trait DateHelper
 {
@@ -50,7 +52,7 @@ trait DateHelper
 
         for ($date = $start_date; $date->lte($end_date); $date->addDay()) {
 
-            $dates[] = isset($date_format) ? $date->format($date_format) : $date->format('Y-m-d');
+            $dates[] = $date_format != null ? $date->format($date_format) : $date;
         }
 
         return $dates;
@@ -84,10 +86,54 @@ trait DateHelper
 
     public function getDaysDifference(Carbon $start_date, Carbon $end_date, bool $includeDates = false): int
     {
-        
-        return $includeDates ? Carbon::parse($start_date)->diffInDays(Carbon::parse($end_date))  + 1 : Carbon::parse($start_date)->diffInDays(Carbon::parse($end_date));
 
+        return $includeDates ? Carbon::parse($start_date)->diffInDays(Carbon::parse($end_date))  + 1 : Carbon::parse($start_date)->diffInDays(Carbon::parse($end_date));
     }
-    
-    
+
+    /**
+     * Return iterable period of date
+     * 
+     * @param Carbon $start_date
+     * @param Carbon $end_date
+     * @param string $interval default=P1D
+     * @return array
+     */
+
+    public function getDateInterval(Carbon $start_date, Carbon $end_date, string $interval = 'P1D'): iterable
+    {
+        // include end date to
+        $end_date = $end_date->addDay()->setTime(0, 0, 1);
+
+        return new DatePeriod($start_date, new DateInterval($interval), $end_date);
+    }
+
+
+
+    public function excludeHolidaysOrNonWorkingDays(Carbon $start_date, Carbon $end_date, array $holidays = null, array $nonWorkingDays = null): iterable
+    {
+
+        $dates = [];
+
+        $period = $this->getDateInterval($start_date, $end_date);
+
+        foreach ($period as $dt) {
+
+            if ($holidays) {
+                if (in_array($dt->format('l'), $nonWorkingDays)) {
+                    // $days--;
+                    unset($dt);
+                }
+            } elseif ($nonWorkingDays) {
+                if (in_array($dt->format('Y-m-d'), $holidays)) {
+                    // $days--;
+                    unset($dt);
+                }
+            } else {
+
+                $dates[] = $dt;
+            }
+        }
+
+        return $dates;
+    }
 }
