@@ -107,33 +107,55 @@ trait DateHelper
         return new DatePeriod($start_date, new DateInterval($interval), $end_date);
     }
 
+    /**
+     * Generate date range given start date and end date as Carbon objects.
+     * But with addition of excluding Non working days or holidays
+     * 
+     * @param Carbon $start_date
+     * @param Carbon $end_date
+     * @param array $holidays
+     * @param array $nonWorkingDays
+     * @return array
+     */
 
-
-    public function excludeHolidaysOrNonWorkingDays(Carbon $start_date, Carbon $end_date, array $holidays = null, array $nonWorkingDays = null): iterable
+    public function getDateRangeExcludingHolidaysOrNonWorkingDays(Carbon $start_date, Carbon $end_date, array $holidays = [], array $nonWorkingDays = [], bool $getCount = false)
     {
-
+        // dd($end_date);
         $dates = [];
 
         $period = $this->getDateInterval($start_date, $end_date);
 
         foreach ($period as $dt) {
 
-            if ($holidays) {
-                if (in_array($dt->format('l'), $nonWorkingDays)) {
-                    // $days--;
-                    unset($dt);
-                }
-            } elseif ($nonWorkingDays) {
-                if (in_array($dt->format('Y-m-d'), $holidays)) {
-                    // $days--;
-                    unset($dt);
-                }
+            if (in_array($dt->format('l'), $nonWorkingDays)) {                
+                unset($dt);
+            } elseif (in_array($dt->format('Y-m-d'), $holidays)) {                
+                unset($dt);
             } else {
-
                 $dates[] = $dt;
             }
         }
 
-        return $dates;
+        return $getCount == true ? collect($dates)->count() : $dates;        
+    }
+
+
+     /**
+     * Calculate date range count given start date and end date and exclusion of holidays or non working days. 
+     * Return as integers.
+     * 
+     * 
+     * @param Carbon $start_date
+     * @param Carbon $end_date
+     * @param array $holidays
+     * @param array $nonWorkingDays
+     * @return array
+     */
+
+    public function getDateRangeExcludingHolidaysOrNonWorkingDaysCount(Carbon $start_date, Carbon $end_date, array $holidays = [], array $nonWorkingDays = []): int
+    {
+        $date_range = $this->getDateRangeExcludingHolidaysOrNonWorkingDays($start_date, $end_date, $holidays, $nonWorkingDays);
+
+        return collect($date_range)->count();
     }
 }
