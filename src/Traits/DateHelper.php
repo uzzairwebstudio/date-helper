@@ -1,6 +1,6 @@
 <?php
 
-namespace Uzzaircode\DateHelper\Traits;
+namespace UzzairWebstudio\DateHelper\Traits;
 
 use Carbon\Carbon;
 use DateInterval;

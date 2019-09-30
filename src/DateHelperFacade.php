@@ -1,5 +1,5 @@
 <?php
-namespace Uzzaircode\DateHelper;
+namespace UzzairWebstudio\DateHelper;
 
 use Illuminate\Support\Facades\Facade;
 
